@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <title>NTB_Agreement_Official_Format</title>
+    <style>
+        @font-face { font-family: 'Kalimati'; src: local('Kalimati'); }
+        :root { --primary: #1e3a8a; --secondary: #10b981; }
+        
+        body { font-family: 'Kalimati', serif; background: #f0f2f5; margin: 0; padding: 20px; }
+        .no-print { max-width: 950px; margin: auto; background: white; padding: 25px; border-radius: 12px; border-top: 10px solid var(--primary); box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-bottom: 50px; }
+        
+        .section { background: #f9fafb; padding: 15px; border: 1px solid #ddd; margin-bottom: 20px; border-radius: 8px; }
+        .section-title { font-weight: bold; color: var(--primary); border-bottom: 2px solid #ddd; margin-bottom: 15px; padding-bottom: 5px; display: block; font-size: 16px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        
+        .date-horizontal { display: flex; align-items: center; gap: 5px; background: #fff; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        .date-horizontal select { padding: 5px; width: 85px; font-family: 'Kalimati'; font-weight: bold; }
+        
+        .input-group { margin-bottom: 10px; display: flex; align-items: center; }
+        .input-group label { width: 120px; font-weight: bold; font-size: 13px; }
+        input, select { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: 'Kalimati'; }
+        
+        .checklist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .check-item { background: #fff; padding: 8px; border: 1px solid #ddd; display: flex; align-items: flex-start; gap: 10px; font-size: 12px; text-align: justify; }
+        .check-item label { cursor: pointer; line-height: 1.4; text-align: justify; width: 100%; }
+
+        button { cursor: pointer; font-weight: bold; border: none; border-radius: 5px; padding: 15px; background: var(--secondary); color: white; width: 100%; font-size: 18px; }
+
+        #printableArea { display: none; background: white; width: 210mm; margin: auto; color: black; }
+        .page { 
+            width: 210mm; min-height: 297mm; padding: 15mm 20mm 25mm 25mm; 
+            margin: auto; box-sizing: border-box; background: white;
+            font-size: 10.2pt; text-align: justify; line-height: 1.35;
+            position: relative; 
+        }
+        .page-break { page-break-before: always; }
+        
+        .header { text-align: center; font-weight: bold; margin-bottom: 12px; font-size: 12pt; }
+        .u { border-bottom: 1px dotted #000; padding: 0 4px; font-weight: bold; }
+        .clause-head { font-weight: bold; margin-top: 6px; display: block; text-decoration: underline; }
+        
+        .sign-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; margin-top: 25px; }
+        .witness-section { margin-top: 25px; border-top: 1px solid #ddd; padding-top: 10px; }
+
+        .appendix-table { width: 100%; border-collapse: collapse; margin-top: 15px; table-layout: fixed; }
+        .appendix-table th, .appendix-table td { border: 1px solid #000; padding: 8px; vertical-align: top; font-size: 10pt; text-align: justify; }
+
+        .page-footer {
+            position: absolute;
+            bottom: 10mm;
+            left: 25mm;
+            right: 20mm;
+            border-top: 1px solid #000;
+            padding-top: 5px;
+            font-size: 8.5pt;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        @media print { 
+            body { background: none; padding: 0; }
+            .no-print { display: none !important; } 
+            #printableArea { display: block !important; }
+            @page { size: A4; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="no-print">
+    <h2 style="text-align:center; color:var(--primary);">अनुसूची-२: सम्झौता व्यवस्थापन प्रणाली (भर्सन ३.४)</h2>
+    
+    <form onsubmit="generate(event)">
+        <div class="section">
+            <span class="section-title">१. आयोजना र बजेट विवरण</span>
+            <div class="grid">
+                <div class="input-group"><label>आर्थिक वर्ष:</label><select id="f_ay" required></select></div>
+                <div class="input-group"><label>बजेट शीर्षक नं:</label><input type="text" id="f_sno" required></div>
+                <div class="input-group"><label>आयोजनाको नाम:</label><input type="text" id="f_pname" required></div>
+                <div class="input-group"><label>जिल्ला:</label>
+                    <select id="f_dist" onchange="updatePalika()" required>
+                        <option value="">-- जिल्ला --</option>
+                        <option value="कास्की">कास्की</option><option value="स्याङ्जा">स्याङ्जा</option>
+                        <option value="पर्वत">पर्वत</option><option value="बागलुङ">बागलुङ</option>
+                        <option value="म्याग्दी">म्याग्दी</option><option value="मुस्ताङ">मुस्ताङ</option>
+                        <option value="गोरखा">गोरखा</option><option value="लमजुङ">लमजुङ</option>
+                        <option value="तनहुँ">तनहुँ</option><option value="मनाङ">मनाङ</option>
+                        <option value="नवलपरासी (बर्दघाट सुस्ता पूर्व)">नवलपरासी (बर्दघाट सुस्ता पूर्व)</option>
+                    </select>
+                </div>
+                <div class="input-group"><label>स्थानीय तह:</label><select id="f_palika" required></select></div>
+                <div class="input-group"><label>वडा नं:</label><input type="text" id="f_ward" required></div>
+                <div><label>कुल लागत (रु.):</label><input type="text" id="f_tamt" onblur="formatNum(this)" oninput="convertToWords(this, 'w_tamt')" required><br><span id="w_tamt" style="color:#d97706; font-size:12px; font-weight:bold;"></span></div>
+                <div><label>बोर्डले बेहोर्ने (रु.):</label><input type="text" id="f_bamt" onblur="formatNum(this)" oninput="convertToWords(this, 'w_bamt')" required><br><span id="w_bamt" style="color:#d97706; font-size:12px; font-weight:bold;"></span></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <span class="section-title">२. महत्वपूर्ण मितिहरू</span>
+            <div class="grid">
+                <div><label>अनुमान स्वीकृत मिति:</label><div class="date-horizontal" id="d_ap"></div></div>
+                <div><label>योजना सम्पन्न मिति:</label><div class="date-horizontal" id="d_ed"></div></div>
+                <div><label>फरफारक गर्ने मिति:</label><div class="date-horizontal" id="d_fd"></div></div>
+                <div><label>सम्झौता मिति:</label><div class="date-horizontal" id="d_md"></div></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <span class="section-title">३. हस्ताक्षरकर्ता र साक्षी विवरण</span>
+            <div class="grid">
+                <div style="border-right: 1px solid #ddd; padding-right: 10px;">
+                    <strong style="color:var(--primary)">प्रथम पक्ष (बोर्ड)</strong>
+                    <div class="input-group"><label>प्रतिनिधि नाम:</label><input type="text" id="f_r1" required></div>
+                    <div class="input-group"><label>पद:</label><input type="text" id="f_r1p" required></div>
+                    <div class="input-group"><label>साक्षी नाम:</label><input type="text" id="f_s1"></div>
+                    <div class="input-group"><label>साक्षी पद:</label><input type="text" id="f_s1p"></div>
+                </div>
+                <div>
+                    <strong style="color:var(--primary)">दोश्रो पक्ष (पालिका)</strong>
+                    <div class="input-group"><label>प्रतिनिधि नाम:</label><input type="text" id="f_r2" required></div>
+                    <div class="input-group"><label>पद:</label><input type="text" id="f_r2p" required></div>
+                    <div class="input-group"><label>साक्षी नाम:</label><input type="text" id="f_s2"></div>
+                    <div class="input-group"><label>साक्षी पद:</label><input type="text" id="f_s2p"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <span class="section-title">४. अनुसूची "क" मा रहने कागजातहरु छनौट</span>
+            <div class="checklist-grid" id="checklist_input"></div>
+        </div>
+
+        <button type="submit">अक्षरश: सम्झौता पत्र तयार पार्नुहोस्</button>
+    </form>
+</div>
+
+<div id="printableArea">
+    <div class="page">
+        <div class="header">अनुसूची–२<br>समझदारीपत्र/सम्झौतापत्रको ढाँचा<br>(दफा ८ उपदफा (२) सँग सम्बन्धित)<br><br>नेपाल पर्यटन बोर्ड, गण्डकी प्रदेश कार्यालय र <span class="u" id="p_palika_head"></span> बीच सम्पन्न सम्झौता पत्र</div>
+        <div contenteditable="true">
+            <p><strong>भुमिका:</strong> नेपाल पर्यटन बोर्डको आ.ब. <span class="u" id="p_ay"></span> को स्वीकृत बजेट शीर्षक नं. <span class="u" id="p_sno"></span> (<span class="u" id="p_pname"></span>) मा व्यवस्था तथा विनियोजन भए बमोजिम “पर्यटन पूर्वाधार कार्यक्रम कार्यान्वयन दिग्दर्शन, २०७९” अनुसार कार्यान्वयन गर्न नेपाल पर्यटन बोर्ड, गण्डकी प्रदेश कार्यालय, पोखरा (यहाँ उप्रान्त "प्रथम पक्ष" भनिने) र <span class="u" id="p_palika_body"></span> (यहाँ उप्रान्त "दोश्रो पक्ष" भनिने) देहायको शर्तहरु पूरा गरी कार्यक्रम कार्यान्वयन गर्न सहमत भएका छौं/ छन् ।</p>
+            <span class="clause-head">क) कार्यक्रमको विवरण</span>
+            १. दोश्रो पक्षले मिति <span class="u" id="p_ap_date"></span> मा स्वीकृत विस्तृत लागत अनुमान, नक्सा/ स्केच र प्राविधिक डिजाइन अनुसार <span class="u" id="p_dist"></span> जिल्लाको <span class="u" id="p_loc"></span> मा कार्यान्वयन गर्नुपर्नेछ । <br>
+            २. बोर्डबाट विनियोजन भएको कार्यक्रम तथा बजेट दोश्रो पक्षले आफ्नो कार्यसमिति/कार्यपालिका बाट स्वीकृत वा अनुमोदन गरेको हुनुपर्नेछ ।
+            <span class="clause-head">ख) बजेट, बजेट निकासा र फर्छ्यौट</span>
+            १. कार्यक्रमको कूल लागत बजेट रकम रु.<span class="u" id="p_tamt"></span> (अक्षरेपी <span class="u" id="p_tw"></span>) रहनेछ । प्रथम पक्षले उपरोक्त कार्यक्रम कार्यान्वयनका लागि वास्तविक खर्चको आधारमा कूल कार्यक्रम लागतको ७५ प्रतिशतले हुन आउने बोर्डको वार्षिक बजेटमा उपलब्ध भए बमोजिमको रकम सम्पूर्ण कार्य सम्पन्न भए पश्चात बढीमा रु.<span class="u" id="p_bamt"></span> (अक्षरेपी <span class="u" id="p_bw"></span>) रकम सम्म दोश्रो पक्षलाई उपलब्ध गराउनेछ । <br>
+            २. कूल लागत १० लाख अक्षरेपी दश लाख भन्दा माथिको योजना सार्वजनिक खरिद ऐन २०६३ तथा सार्वजनिक खरिद नियमावली २०६४ बमोजिम सार्वजनिक सूचना प्रकाशन गरी आवश्यकता बमोजिम सिलबन्दी दरभाउपत्र वा बोलपत्र बिधि मार्फत खरिद गर्ने गराउने कार्य गर्नुपर्नेछ ।  <br>
+            ३. कार्यक्रम कार्यान्वयन वा सम्पन्न गर्नका लागि आवश्यक थप बजेट आवश्यक पर्न गएमा दोश्रो पक्षले नै आवश्यक व्यवस्था गर्नुपर्नेछ ।  <br>
+            ४. दोश्रो पक्षले (मिति <span class="u" id="p_edate"></span>) भित्रै कार्यक्रम सम्पन्न गरी (मिति <span class="u" id="p_fdate"></span>) सम्म फरफारक समेत गरिसक्नुपर्नेछ । <br>
+            ५. कार्यक्रमको आन्तरीक लेखा परीक्षण र महालेखा परीक्षण प्रचलित कानुन बमोजिम गराउने जिम्मेवारी दोश्रो पक्षकै रहनेछ । दोश्रो पक्षले नियमानुसार अन्तिम लेखापरिक्षण सम्पन्न गरी लेखा परीक्षण सम्पन्न भएको मितिले १ (एक) महिनाभित्र (बेरुजू वा कैफियत रहे/नरहेको विवरण सहित) पत्र मार्फत प्रथम पक्षलाई जानकारी दिनुपर्नेछ ।  <br>
+            ६. कार्यक्रमको लेखा परीक्षणबाट निस्केको बेरुजू वा कैफियत फर्छौट गर्न गराउने ब्यवस्था दोश्रो पक्षले गर्नुपर्नेछ ।
+            <span class="clause-head">ग) संचालन, व्यवस्थापन र प्रबर्द्धन</span>
+            १. स्थानिय सरकार संचालन ऐन, २०७४ एवं कार्यविधि तथा नेपाल पर्यटन बोर्डको पर्यटन पूर्वाधार विकास कार्यक्रम कार्यान्वयन दिग्दर्शन, २०७९ बमोजिम उल्लेखित कार्यक्रम कार्यान्वयन गर्नुपर्नेछ ।  <br>
+            २. सम्पन्न पर्यटन पूर्वाधार कार्यक्रम वा सम्पदाको दैनिक संचालन व्यवस्थापन, मर्मत संभार र दिगोपना (Operational & Management) राख्ने व्यवस्था सम्बन्धित स्थानीय निकाय वा स्थानीय गुठी वा पर्यटन सम्बद्ध संघसंस्था वा उपभोक्ता समुहले गर्नुपर्नेछ । <br>
+            ३. यस कार्यक्रम अन्तर्गत तयार हने सम्पदालाई दोश्रो पक्षले पर्यटकीय प्रयोजनका लागि प्रयोग गर्नेछ । दोश्रो पक्षले सोका लागि आवश्यक प्रचारप्रसार र प्रबर्द्धनजन्य कार्यक्रमहरु आफैंले संचालन गर्नेछ । <br>
+            ४. कार्यक्रमका लागि आवश्यक पर्ने Engineering Design तयारी, खरिद लगायतका प्रक्रियाहरु दोश्रो पक्षले स्थानीय सरकारको नियम, कानून एवम् कार्यविधि अनुसार गर्नेछ ।  
+            <br> <span class="clause-head">घ) अनुगमन तथा मुल्यांकन</span>
+            १. कार्यक्रम कार्यान्वयनको क्रममा कार्यक्रमका भौतिक, प्राविधिक, गुणस्तर तथा अन्य पक्षहरुको दोश्रो पक्षले नियमानुसार नियमित अनुगमन गर्नेछ । प्रथम पक्षले कार्यक्रमको प्रगति विवरण माग गर्न सक्नेछ र आवश्यकता अनुसार कार्यक्रमको प्रगति अनुगमन गर्न सक्नेछ ।  <br>
+            २. प्रथम पक्षले अनुगमनका लागि बिशषेज्ञ प्रतिनिधि वा कुनै फर्मलाई तोक्न सक्नेछ‚ यस क्रममा अनुगमनको लागि आवश्यक सहयोग र प्रबन्ध गर्ने कार्य दोस्रो पक्षको हुनेछ।  
+        </div>
+        <div class="page-footer">नेपाल पर्यटन बोर्ड, ग. प्र. का. र <span class="dyn-dist"></span> जिल्ला <span class="dyn-palika"></span> बीच <span class="dyn-pname"></span> कार्यक्रम कार्यान्वयनका लागि सम्पन्न सम्झौतापत्र | पृष्ठ १/३</div>
+    </div>
+
+    <div class="page page-break">
+        <div contenteditable="true">
+            <span class="clause-head">ङ) जवाफदेहिता</span>
+            १. कार्यक्रम वा आयोजनाको प्रभावकारी कार्यान्वयन गर्ने र आर्थिक सुशासन कायम गर्ने गराउने सम्पूर्ण जिम्मेवारी एवं जवाफदेहीता कार्यक्रम कार्यान्वयन गर्ने दोश्रो पक्षको हुनेछ । <br>
+            २. कार्यक्रममा गुणस्तरीयता र आर्थिक पारदर्शीता कायम राख्ने जिम्मेवारी दोश्रो पक्षको रहनेछ । <br>
+            ३. पर्यटन पूर्वाधार निर्माण एवं सौन्दर्यीकरण कार्य सम्पन्न भएको कार्यक्रम वा आयोजना स्थलमा सहयोगी संस्था, नेपाल पर्यटन बोर्डको नाम उल्लेख गरको सूचना बोर्ड राख्नुपर्नेछ ।
+            <span class="clause-head">च) असामान्य परिस्थिती</span>
+            १. कुनै मनाशिव कारणवश कार्यक्रम कार्यान्वयन हुन नसक्ने परिस्थिती सिर्जना हुन गएमा दोश्रो पक्षले सोको जानकारी प्रथम पक्षलाई जानकारी गराउनुपर्दछ । र प्रथम पक्षबाट दोस्रो पक्षलाई पेश्की निकासा गरिएको भए सो पेश्की रकम प्रथम पक्षलाई नै फिर्ता गर्नुपर्नेछ। <br>
+            २. कार्यक्रम कार्यान्वयनको क्रममा कुनै विवाद, झगडा, भवितब्य, क्षतिपूर्ति, दुर्घटना तथा  अन्य नकारात्मक परिस्थितीहरु सिर्जना हुन गएमा सोको निरुपण गर्ने जिम्मेवारी दोश्रो पक्षको हुनेछ । प्रथम पक्षलाई जिम्मेवार बनाइने छैन ।
+
+            <span class="clause-head">छ) अन्य</span>
+            १. दोश्रो पक्षले आयोजनाको नाम, ठेगाना, कूल लागत, सम्झौताको अवधि, कार्य शुरु हुने समय र संचालन गर्ने निकाय खुल्ने सूचनापाटी वा ताम्रापत्र वा शिलापत्र (न्यूनतम २ फिट * ३ फीट) आयोजना स्थलमा कार्यक्रम संचालनपूर्व राख्नुपर्नेछ । <br>
+            २. पाँच लाख वा सोभन्दा बढी रकम बोर्डको सहयोग रहेको कार्यक्रम सम्पन्न भएपश्चात दोश्रो पक्षले नेपाल पर्यटन बोर्डको लोगो सहितको सहयोग खुल्ने दिगो प्रकृतिको सूचनापाटी वा शिलापत्र वा ताम्रपत्र अनिवार्य राख्नुपर्नेछ । <br>
+            ३. यस सम्झौतामा लेखिएको विषयको हकमा यसै अनुसार र अन्यको हकमा प्रचलित नेपाल कानून, बोर्डको  चालू आर्थिक वर्षको बजेट तथा कार्यक्रम सञ्चालन सम्बन्धी निर्देशन बमोजिम हुनेछ । <br>
+            ४. दोस्रो पक्षद्वारा गरिएको प्राविधिक नापजाँच तथा मूल्याङ्कन रकमभन्दा यस सम्झौताका खण्ड घ (२) बमोजिम प्रथम पक्षद्वारा प्राविधिक मूल्याङ्कन गरिएमा, सो मूल्याङ्कनबाट निर्धारण भएको रकम दोस्रो पक्षले गरेको प्राविधिक नापजाँच तथा मूल्याङ्कन रकमभन्दा कम हुन आएमा, प्रथम पक्षले निर्धारण गरेको उक्त मूल्याङ्कन रकमलाई नै अन्तिम मूल्याङ्कन रकम मानिनेछ र सोही बमोजिम भुक्तानी गरिनेछ । <br>
+            ५. सुशासन तथा सार्वजनिक जवाफदेहिता कायम गर्न दोस्रो पक्षले योजनाको सार्वजनिक परीक्षण गराउनुपर्नेछ । <br>
+            ६. अन्तिम भुक्तानीको लागि आवश्यक कागजातहरु यस सम्झौताको अनुसूची "क" मा उल्लेख गरे बमोजिम हुनेछन्‌ । अनुसूची "क" यस सम्झौताको अभिन्न अङ्ग रहनेछ र प्रथम पक्ष समक्ष दोस्रो पक्षले उल्लिखित कागजातहरु सहित भुक्तानी माग गर्नुपर्नेछ । <br>
+            ७. यस सम्झौताको अवधि सम्झौता मितिबाट लागु भई चालु आर्थिक वर्षको आषाढ मसान्तसम्म मात्र कायम रहनेछ । <br>
+            ८. उल्लिखित शर्तहरु पालना नभएमा वा सम्झौता बमोजिमको कागजातहरु प्राप्त नभएमा प्रथम पक्ष भुक्तानी गर्न बाध्य हुने छैन । र यस सम्झौतमा उल्लिखित कुराहरु यस सम्झौता बमोजिम तथा यस सम्झौतामा उल्लेख गरिए भन्दा फरक कुराहरु प्रचलित कानून बमोजिम हुने गरी माथि उल्लिखित शर्तहरुको अधिनमा रही दुवै पक्षहरुको राजी खुशीमा यो सम्झौतामा हस्ताक्षर गरी एक–एक प्रति लियौं, दियौं ।
+        </div>
+        
+        <div class="sign-grid">
+            <div><strong>प्रथम पक्षको तर्फबाट</strong><br><br>हस्ताक्षर: ...........................<br>नाम: <span id="p_r1"></span><br>पद: <span id="p_r1p"></span></div>
+            <div><strong>दोश्रो पक्षको तर्फबाट</strong><br><br>हस्ताक्षर: ...........................<br>नाम: <span id="p_r2"></span><br>पद: <span id="p_r2p"></span></div>
+        </div>
+        <div class="sign-grid witness-section">
+            <div><strong>साक्षी (प्रथम पक्ष)</strong><br><br>हस्ताक्षर: ...........................<br>नाम: <span id="p_s1"></span><br>पद: <span id="p_s1p"></span></div>
+            <div><strong>साक्षी (दोश्रो पक्ष)</strong><br><br>हस्ताक्षर: ...........................<br>नाम: <span id="p_s2"></span><br>पद: <span id="p_s2p"></span></div>
+        </div>
+        <p style="margin-top:15px;">सम्झौता मिति : <span class="u" id="p_mdate"></span></p>
+        <div class="page-footer">नेपाल पर्यटन बोर्ड, ग. प्र. का. र <span class="dyn-dist"></span> जिल्ला <span class="dyn-palika"></span> बीच <span class="dyn-pname"></span> कार्यक्रम कार्यान्वयनका लागि सम्पन्न सम्झौतापत्र | पृष्ठ २/३</div>
+    </div>
+
+    <div class="page page-break">
+        <div class="header">अनुसूची "क" (अन्तिम भुक्तानीको लागि आवश्यक कागजातहरु)</div>
+        <table class="appendix-table">
+            <thead><tr><th style="width:10%;">क्र.स.</th><th style="width:55%;">चरण तथा कागजातहरु</th><th style="width:35%;">कैफियत</th></tr></thead>
+            <tbody id="p_appendix_body"></tbody>
+        </table>
+        <div class="page-footer">नेपाल पर्यटन बोर्ड, ग. प्र. का. र <span class="dyn-dist"></span> जिल्ला <span class="dyn-palika"></span> बीच <span class="dyn-pname"></span> कार्यक्रम कार्यान्वयनका लागि सम्पन्न सम्झौतापत्र | पृष्ठ ३/३</div>
+    </div>
+
+    <div class="no-print" style="text-align:center; padding: 20px;">
+        <button onclick="window.print()" style="width:300px; background:black;">PDF सेव वा प्रिन्ट गर्नुहोस्</button>
+    </div>
+</div>
+
+<script>
+const docs = [
+    {t: "स्वीकृत अनुमानित लागत (Cost Estimate) को प्रमाणित प्रतिलिपि", k: ""},
+    {t: "कार्यपालिका बाट स्वीकृत वा अनुमोदन (म्याचिङ फण्ड बिनियोजनको निर्णय)", k: ""},
+    {t: "नेपाल पर्यटन बोर्ड र स्थानीय तहबीच सम्पन्न सम्झौतापत्रको प्रतिलिपि", k: ""},
+    {t: "उपभोक्ता समिति गठनको माइन्यूट", k: "उपभोक्ता समितिको हकमा"},
+    {t: "दरभाउपत्र वा बोलपत्र आवह्यन सम्बन्धी सूचना", k: "सिलबन्दी दरभाउपत्र तथा बोलपत्रको हकमा"},
+    {t: "दरभाउपत्र वा बोलपत्र मूल्याङ्कनको प्रतिवेदन", k: "सिलबन्दी दरभाउपत्र तथा बोलपत्रको हकमा "},
+    {t: "उपभोक्ता समिति वा सेवा प्रदायकसँगको सम्झौतापत्र", k: ""},
+    {t: "लागत अनुमान बमोजिमको खर्च पुष्टि हुने बीलहरु", k: "सम्पूर्ण बीलको प्रतिलिपि लागत अनुमान बमोजिमको शिर्षकहरु खुल्ने गरी सिलसिलेवार राख्ने"},
+    {t: "प्राविधिक मूल्याङ्कन (Running / Final Bill) सम्बन्धी कागजातको प्रमाणित प्रतिलिपी ", k: ""},
+    {t: "स्थानीय तहको अनुगमन प्रतिवेदन", k: ""},
+    {t: "सार्वजनिक परीक्षणको माइन्यूटको प्रतिलिपि", k: "सरोकारवालाहरुसँगको"},
+    {t: "सूचनापाटी (न्यूनतम २ फिट *३ फीट) आयोजना स्थलमा राखेको फोटो", k: ""},
+    {t: "कार्य सम्पन्न प्रतिवेदन", k: "प्राविधिक मूल्याङ्कन सम्बन्धी कागजातको प्रमाणित प्रतिलिपीमा कार्य सम्पन्न खुलाइएको छ भने छुट्टै आवश्यक नपर्ने"},
+    {t: "कार्यसँग सम्बन्धित फोटोहरु", k: ""},
+    {t: "प्रथम पक्षको प्राविधिक मूल्याङ्कन प्रतिवेदन", k: "यदि प्रथम पक्षले प्राविधिक नापजाँच तथा अनुगमन गरेको अवस्थामा"},
+    {t: "भुक्तानी मागको पत्र", k: "लागत अनुमान बमोजिमको कार्य सम्पन्न भएको खुलाई लेख्ने"}
+];
+
+const checkIn = document.getElementById('checklist_input');
+docs.forEach((d, i) => {
+    checkIn.innerHTML += `<div class="check-item"><input type="checkbox" id="c${i}" checked><label for="c${i}"><b>${i+1}.</b> ${d.t}</label></div>`;
+});
+
+const months = ["०१","०२","०३","०४","०५","०६","०७","०८","०९","१०","११","१२"];
+function setDateUI(id) {
+    const box = document.getElementById(id);
+    let html = `<select class="y" required><option value="">-- साल --</option>`;
+    for(let i=2081; i<=2085; i++) html += `<option value="${i}">${i}</option>`;
+    html += `</select> <select class="m" required><option value="">-- महिना --</option>`;
+    months.forEach(m => html += `<option value="${m}">${m}</option>`);
+    html += `</select> <select class="d" required><option value="">-- गते --</option>`;
+    for(let i=1; i<=32; i++) { let v = i < 10 ? '०'+i : i; html += `<option value="${v}">${v}</option>`; }
+    html += `</select>`;
+    box.innerHTML = html;
+}
+["d_ap","d_ed","d_fd","d_md"].forEach(setDateUI);
+
+const ayS = document.getElementById('f_ay');
+ayS.innerHTML = '<option value="">-- छान्नुहोस् --</option>';
+for(let i=0; i<3; i++) { let y = 2081+i; ayS.innerHTML += `<option value="${y}/${(y+1).toString().slice(-2)}">${y}/${(y+1).toString().slice(-2)}</option>`; }
+
+const palikas = {
+    "स्याङ्जा": ["पुतलीबजार न.पा.", "वालिङ न.पा.", "भीरकोट न.पा.", "गल्याङ न.पा.", "चापाकोट न.पा.", "बिरुवा गा.पा.", "फेदीखोला गा.पा.", "आँधीखोला गा.पा.", "अर्जुनचौपारी गा.पा.", "कालीगण्डकी गा.पा.", "हरिनास गा.पा."],
+    "कास्की": ["पोखरा म.न.पा.", "अन्नपूर्ण गा.पा.", "माछापुच्छ्रे गा.पा.", "मादी गा.पा.", "रूपा गा.पा."],
+    "पर्वत": ["कुश्मा न.पा.", "फलेवास न.पा.", "जलजला गा.पा.", "मोदी गा.पा.", "महाशिला गा.पा.", "विहादी गा.पा.", "पैयूँ गा.पा."],
+    "बागलुङ": ["बागलुङ न.पा.", "गल्कोट न.पा.", "जैमिनी न.पा.", "ढोरपाटन न.पा.", "काठेखोला गा.पा.", "तमानखोला गा.पा.", "ताराखोला गा.पा.", "निसिखोला गा.पा.", "बडिगाड गा.पा.", "बरेङ गा.पा."],
+    "म्याग्दी": ["बेनी न.पा.", "अन्नपूर्ण गा.पा.", "धवलागिरी गा.पा.", "मंगला गा.पा.", "मालिका गा.पा.", "रघुगंगा गा.पा."],
+    "मुस्ताङ": ["घरपझोङ गा.पा.", "थासाङ गा.पा.", "लो-घेकर दामोदरकुण्ड गा.पा.", "लोमान्थाङ गा.पा.", "वारागुङ मुक्तिक्षेत्र गा.पा."],
+    "गोरखा": ["गोरखा न.पा.", "पालुङटार न.पा.", "अजिरकोट गा.पा.", "आरुघाट गा.पा.", "गण्डकी गा.पा.", "चुम नुब्री गा.पा.", "धार्चे गा.पा.", "भिमसेनथापा गा.पा.", "शहिद लखन गा.पा.", "सिरानचोक गा.पा.", "बारपाक सुलिकोट गा.पा."],
+    "लमजुङ": ["बेसीशहर न.पा.", "मध्यनेपाल न.पा.", "राईनास न.पा.", "सुन्दरबजार न.पा.", "क्व्होलासोथार गा.पा.", "दूधपोखरी गा.पा.", "दोर्दी गा.पा.", "मर्स्याङ्दी गा.पा."],
+    "तनहुँ": ["व्यास न.पा.", "भानु न.पा.", "भिमाद न.पा.", "शुक्लागण्डकी न.पा.", "आँवुखैरेनी गा.पा.", "ऋषििङ गा.पा.", "घिरिङ गा.पा.", "देवघाट गा.पा.", "म्याग्दे गा.पा.", "बन्दीपुर गा.पा."],
+    "मनाङ": ["चामे गा.पा.", "नार्पा भूमि गा.पा.", "नासपा गा.पा.", "मनाङ ङिस्याङ गा.पा."],
+    "नवलपरासी (बर्दघाट सुस्ता पूर्व)": ["कावासोती न.पा.", "गैंडाकोट न.पा.", "देवचुली न.पा.", "मध्यविन्दु न.पा.", "विनयी त्रिवेणी गा.पा.", "बुलिङटार गा.पा.", "बौदीकाली गा.पा.", "हुप्सेकोट गा.पा."]
+};
+
+function updatePalika() {
+    const d = document.getElementById('f_dist').value;
+    const p = document.getElementById('f_palika');
+    p.innerHTML = '<option value="">-- छान्नुहोस् --</option>';
+    if(palikas[d]) palikas[d].forEach(i => p.innerHTML += `<option value="${i}">${i}</option>`);
+}
+
+function formatNum(el) {
+    let val = el.value.replace(/,/g, '').replace(/\/-/g, '');
+    if(val && !isNaN(val)) el.value = new Number(val).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "/-";
+}
+
+const units = ["", "एक", "दुई", "तीन", "चार", "पाँच", "छ", "सात", "आठ", "नौ", "दश", "एघार", "बाह्र", "तेह्र", "चौध", "पन्ध्र", "सोह्र", "सत्र", "अठार", "उन्नाइस", "बीस", "एकइस", "बाइस", "तेइस", "चौबीस", "पच्चिस", "छब्बिस", "सत्ताइस", "अठाइस", "उनन्तीस", "तीस", "एकतीस", "बत्तीस", "तेत्तीस", "चौंतीस", "पैंतीस", "छत्तीस", "सैंतीस", "अठतीस", "उनन्चालीस", "चालीस", "एकचालीस", "बयालीस", "त्रिचालीस", "चौवालीस", "पैँतालीस", "छयालीस", "सच्चालीस", "अठारचालीस", "उनन्पचास", "पचास", "एकाउन्न", "बाउन्न", "त्रिपन्न", "चौपन्न", "पचपन्न", "छपन्न", "सन्ताउन्न", "अन्ठाउन्न", "उनन्साठी", "साठी", "एकसाठी", "बासठ्ठी", "त्रिसठ्ठी", "चौसठ्ठी", "पैँसठ्ठी", "छयसठ्ठी", "सत्सठ्ठी", "अठसठ्ठी", "उनन्सत्तरी", "सत्तरी", "एकहत्तर", "बहत्तर", "त्रिहत्तर", "चौहत्तर", "पचहत्तर", "छहत्तर", "सतहत्तर", "अठहत्तर", "उनन्असी", "असी", "एकासी", "बयासी", "त्रियासी", "चौरासी", "पचासी", "छयासी", "सतासी", "अठासी", "उनन्नब्बे", "नब्बे", "एकानब्बे", "बयानब्बे", "त्रियानब्बे", "चौरानब्बे", "पञ्चानब्बे", "छ्यानब्बे", "सन्तानब्बे", "अन्ठानब्बे", "उनन्सय"];
+
+function convertToWords(el, outId) {
+    let val = el.value.replace(/,/g, '').replace(/\/-/g, '');
+    if (!val || isNaN(val)) return;
+    
+    let parts = val.split('.');
+    let rupees = parseInt(parts[0]);
+    let paisa = parts[1] ? parseInt(parts[1].substring(0, 2)) : 0;
+
+    function helper(num) {
+        let r = "";
+        if (num >= 10000000) { r += units[Math.floor(num/10000000)] + " करोड "; num %= 10000000; }
+        if (num >= 100000) { r += units[Math.floor(num/100000)] + " लाख "; num %= 100000; }
+        if (num >= 1000) { r += units[Math.floor(num/1000)] + " हजार "; num %= 1000; }
+        if (num >= 100) { r += units[Math.floor(num/100)] + " सय "; num %= 100; }
+        if (num > 0) r += units[num];
+        return r;
+    }
+
+    let wordStr = helper(rupees) + " रुपैयाँ";
+    if (paisa > 0) wordStr += " र " + units[paisa] + " पैसा";
+    document.getElementById(outId).innerText = wordStr + " मात्र";
+}
+
+function generate(e) {
+    e.preventDefault();
+    const office = document.getElementById('f_palika').value;
+    const dist = document.getElementById('f_dist').value;
+    const pname = document.getElementById('f_pname').value;
+
+    document.getElementById('p_palika_head').innerText = office;
+    document.getElementById('p_palika_body').innerText = office + "‚ " + dist;
+    document.getElementById('p_loc').innerText = office + " वडा नं. " + document.getElementById('f_ward').value;
+    
+    // फुटरमा डेटा भर्ने
+    document.querySelectorAll('.dyn-dist').forEach(el => el.innerText = dist);
+    document.querySelectorAll('.dyn-palika').forEach(el => el.innerText = office);
+    document.querySelectorAll('.dyn-pname').forEach(el => el.innerText = pname);
+
+    const getD = (id) => {
+        const c = document.getElementById(id);
+        const y = c.querySelector('.y').value;
+        const m = c.querySelector('.m').value;
+        const d = c.querySelector('.d').value;
+        return `${y} साल ${m} महिना ${d} गते`;
+    };
+    
+    document.getElementById('p_ap_date').innerText = getD('d_ap');
+    document.getElementById('p_edate').innerText = getD('d_ed');
+    document.getElementById('p_fdate').innerText = getD('d_fd');
+    document.getElementById('p_mdate').innerText = getD('d_md');
+    
+    ['ay','sno','pname','tamt','bamt','r1','r1p','r2','r2p','s1','s1p','s2','s2p'].forEach(id => {
+        if(document.getElementById('p_'+id)) document.getElementById('p_'+id).innerText = document.getElementById('f_'+id).value;
+    });
+    document.getElementById('p_tw').innerText = document.getElementById('w_tamt').innerText;
+    document.getElementById('p_bw').innerText = document.getElementById('w_bamt').innerText;
+    document.getElementById('p_dist').innerText = dist;
+
+    const apBody = document.getElementById('p_appendix_body');
+    apBody.innerHTML = ''; let count = 1;
+    docs.forEach((d, i) => {
+        if(document.getElementById(`c${i}`).checked) {
+            apBody.innerHTML += `<tr><td style="text-align:center">${count}</td><td>${d.t}</td><td>${d.k}</td></tr>`;
+            count++;
+        }
+    });
+
+    document.getElementById('printableArea').style.display = 'block';
+    window.scrollTo(0, document.body.scrollHeight);
+}
+</script>
+</body>
+</html>
